@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zcz.dao.BookMapper">
+    <insert id="addBookById" parameterType="Books">
+        insert into ssmbuild.books (bookID, bookName, bookCounts, detail)
+        VALUES (#{bookID},#{bookName},#{bookCounts},#{detail})
+    </insert>
+    <delete id="delBookById" parameterType="int">
+        delete from ssmbuild.books where bookID=#{bookId}
+    </delete>
+    <update id="updateBookById" parameterType="Books">
+        update ssmbuild.books
+        set bookName =#{bookName},bookCounts=#{bookCounts},detail=#{detail}
+        where bookID=#{bookID};
+    </update>
+
+    <select id="queryBookById" resultType="Books">
+        select *
+        from ssmbuild.books where bookID=#{bookId};
+    </select>
+    
+    <select id="queryAllBooks" resultType="Books">
+        select * from ssmbuild.books
+    </select>
+
+    <select id="queryBookByName" resultType="Books">
+        select * from ssmbuild.books
+        <where>
+            <!--<bind name="Name" value="'%'+bookName+'%'"/>-->
+            <!--where bookName like #{Name}-->
+            <choose>
+                <when test="bookName">
+                    <bind name="BookName" value="'%'+bookName+'%'"/>
+                </when>
+                <otherwise>
+                    <bind name="BookName" value="'%%'"/>
+                </otherwise>
+            </choose>
+        </where>
+        <where>
+            bookName like #{BookName}
+        </where>
+    </select>
+</mapper>
